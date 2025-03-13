@@ -1,0 +1,101 @@
+{% extends "base.html"  %}
+{% block content %}
+<div class="container position-relative">
+ <!-- 新增浮动控制栏 -->
+    <div class="control-bar d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0">分类质量分析报告
+            <small class="text-muted">生成时间：{{ now.strftime('%Y-%m-%d   %H:%M') }}</small>
+        </h2>
+        <div class="d-flex align-items-center">
+            <a href="{{ url_for('analysis') }}?refresh=1"
+               class="btn btn-primary btn-sm shadow-sm">
+               <i class="bi bi-arrow-clockwise"></i>
+               强制刷新
+            </a>
+            <span class="text-muted ms-3" style="font-size:0.9em">
+                <i class="bi bi-info-circle"></i>
+                最后更新：{{ now.strftime('%H:%M:%S')  }}
+            </span>
+        </div>
+    </div>
+
+    <!-- 全局对比图 -->
+    <div class="card mb-5 shadow">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-bar-chart-fill me-2"></i>
+            跨类别性能对比
+        </div>
+        <div class="card-body">
+            <img src="{{ url_for('static', filename='results/global_comparison.png')  }}"
+                 class="img-fluid"
+                 alt="全局对比图">
+        </div>
+    </div>
+
+    <!-- 分类别展示 -->
+    <h3 class="mb-3">详细类别分析</h3>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for category in categories %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header">
+                    <i class="bi bi-folder2-open me-2"></i>
+                    {{ category }}
+                </div>
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='results/' + category + '_metrics.png')  }}"
+                         class="card-img-top"
+                         alt="{{ category }}指标图">
+                    <div class="mt-3">
+                        <a href="{{ url_for('category_view', category=category) }}"
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-pencil-square"></i>
+                            前往标注
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 在合适位置（如标题下方）添加 -->
+<div class="refresh-box">
+    <a href="{{ url_for('analysis') }}?refresh=1" class="btn">强制刷新结果</a>
+    <span>最后更新时间：{{ now.strftime('%Y-%m-%d  %H:%M:%S') }}</span>
+</div>
+
+<style>
+/* 新增沉浸式样式 */
+.control-bar {
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 1rem;
+    z-index: 1000;
+}
+
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.12);
+}
+
+@media (max-width: 768px) {
+    .control-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .control-bar > div {
+        margin-top: 1rem;
+    }
+}
+</style>
+
+{% endblock %}

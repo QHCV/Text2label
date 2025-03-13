@@ -1,0 +1,83 @@
+{% extends "base.html"  %}
+{% block content %}
+<div class="container">
+    <h2 class="my-4">{{ category }}
+        <span class="badge bg-primary">标注进度：{{ progress }}</span>
+    </h2>
+
+    <!-- 进度条（保持原样） -->
+    <div class="progress mb-4" style="height: 25px;">
+        {% set percent = (progress.split('/')[0]  |int / progress.split('/')[1]  |int * 100)|round %}
+        <div class="progress-bar progress-bar-striped"
+             role="progressbar"
+             style="width: {{ percent }}%"
+             aria-valuenow="{{ percent }}"
+             aria-valuemin="0"
+             aria-valuemax="100">
+            {{ percent }}%
+        </div>
+    </div>
+
+    <!-- 表格结构优化 -->
+   <!-- 修正后的表格结构 -->
+    <table class="table table-hover table-bordered" id="annotationTable">
+        <thead class="table-dark align-middle">
+            <tr>
+                <th style="width:8%">#</th>
+                <th style="width:50%">文件名</th>
+                <th style="width:22%">标注状态</th>
+                <th style="width:20%">判别结果</th> <!-- 关键修正点 -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for idx, filename in files|enumerate(1) %}
+            <tr class="align-middle">
+                <td class="text-center">{{ idx }}</td>
+                <td>
+                    <a href="{{ url_for('annotate', category=category, filename=filename) }}"
+                       class="text-decoration-none d-block truncate-text"
+                       style="max-width: 400px;">
+                        <span class="font-monospace">{{ filename }}</span>
+                    </a>
+                </td>
+                <td>
+                    {% if annotations[filename].human %}
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-2">✓</span>
+                        <span class="text-success fw-bold">
+                            标注结果：{{ annotations[filename].human }}
+                        </span>
+                        <small class="text-muted ms-2">
+                            ({{ '保留' if annotations[filename].classifier == '1' else '删除' }})
+                        </small>
+                    </div>
+                    {% else %}
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-secondary me-2">◯</span>
+                        <span class="text-muted">待标注</span>
+                    </div>
+                    {% endif %}
+                </td>
+<td class="text-center">
+                    {% if annotations[filename].human %}
+                        {% set human = annotations[filename].human|string %}
+                        {% set classifier = annotations[filename].classifier|string %}
+                        <div class="d-flex justify-content-center align-items-center">
+                            {% if human == classifier %}
+                            <i class="bi bi-check2-circle text-success fs-5 me-2"></i>
+                            <span class="text-success">一致</span>
+                            {% else %}
+                            <i class="bi bi-x-circle text-danger fs-5 me-2"></i>
+                            <span class="text-danger">冲突</span>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <span class="text-muted">N/A</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

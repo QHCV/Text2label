@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0">{{ filename }} 
+            <small class="text-muted">({{ current_idx }}/{{ total }})</small>
+        </h3>
+    </div>
+    <div class="card-body">
+        <!-- 分类器判断 -->
+        <div class="alert alert-info mb-4">
+            分类器判断：
+            <span class="badge bg-{% if annotations[filename].classifier == '1' %}success{% else %}danger{% endif %}">
+                {{ "保留" if annotations[filename].classifier == '1' else "删除" }}
+            </span>
+        </div>
+
+        <!-- 文件内容展示 -->
+        <div class="mb-4">
+            <label class="form-label">文件内容：</label>
+            <pre class="border p-2 bg-light" style="height: 300px; overflow-y: auto;">{{ content }}</pre>
+        </div>
+
+        <!-- 人工标注表单 -->
+        <form method="POST">
+            <!-- 标注选项 -->
+            <div class="mb-4">
+                <label class="form-label d-block">请选择标注结果：</label>
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="label" id="label1" value="1"
+                           {% if annotation == '1' %}checked{% endif %} autocomplete="off"
+                           onchange="this.form.submit()">
+                    <label class="btn btn-outline-success" for="label1">保留 (1)</label>
+
+                    <input type="radio" class="btn-check" name="label" id="label0" value="0"
+                           {% if annotation == '0' %}checked{% endif %} autocomplete="off"
+                           onchange="this.form.submit()">
+                    <label class="btn btn-outline-danger" for="label0">删除 (0)</label>
+                </div>
+            </div>
+
+            <!-- 当前标注状态 -->
+            <div class="alert alert-warning mb-4">
+                当前标注状态：
+                <span class="badge bg-{% if annotation == '1' %}success{% elif annotation == '0' %}danger{% else %}secondary{% endif %}">
+                    {% if annotation == '1' %}
+                        已保留
+                    {% elif annotation == '0' %}
+                        已删除
+                    {% else %}
+                        未标注
+                    {% endif %}
+                </span>
+            </div>
+
+            <!-- 导航按钮 -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url_for('annotate', category=category, filename=files[current_idx-2]) if current_idx > 1 else '#' }}"
+                   class="btn btn-secondary {% if current_idx == 1 %}disabled{% endif %}">
+                    ← 上一个
+                </a>
+
+                <a href="{{ url_for('annotate', category=category, filename=files[current_idx] if current_idx < total else files[-1]) }}"
+                   class="btn btn-primary {% if current_idx == total %}disabled{% endif %}">
+                    下一个 →
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
