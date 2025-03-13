@@ -32,19 +32,19 @@ Once the server is running, open your browser and navigate to the provided URL.
 
 ### 1. Home Page
 
-![image-20250313162358874](C:\Users\chenq\OneDrive\桌面\web\Text2label\static\image\image-20250313162358874.png)
+![image-20250313162358874](.\static\image\image-20250313162358874.png)
 
 ### 2. Pending Annotation Page
 
-![image-20250313162438614](C:\Users\chenq\OneDrive\桌面\web\Text2label\static\image\image-20250313162438614.png)
+![image-20250313162438614](.\static\image\image-20250313162438614.png)
 
 ### 3. Annotation Page
 
-![image-20250313162551992](C:\Users\chenq\OneDrive\桌面\web\Text2label\static\image\image-20250313162551992.png)
+![ ](.\static\image\image-20250313162551992.png)
 
 ### 4. Annotation Results Report
 
-![image-20250313162801392](C:\Users\chenq\OneDrive\桌面\web\Text2label\static\image\image-20250313162801392.png)
+![image-20250313162801392](.\static\image\image-20250313162801392.png)
 
 ------
 
